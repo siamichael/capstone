@@ -1,8 +1,11 @@
 # capstone
 ## controller.py
 Given a one-handed VR controller with one joystick and A, B, X, Y buttons oriented like
+
        X (top)
+       
 A (left)     Y (right)
+
       B (bottom)
 when holding the controller vertically with the joystick on the top, this code 
     - controls the up and down movement of the linear actuator using the X button for up and the B button for down
