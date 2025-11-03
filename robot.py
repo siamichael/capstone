@@ -12,11 +12,11 @@ class Robot:
         GPIO.setmode(GPIO.BCM)
         
         # initialize motor drivers
-        self.motor_front_left = MotorDriver(5, 6, "Front Left")
-        self.motor_front_right = MotorDriver(12, 13, "Front Right")
-        self.motor_rear_left = MotorDriver(16, 19, "Rear Left")
-        self.motor_rear_right = MotorDriver(20, 21, "Rear Right")
-        self.actuator = MotorDriver(23, 24, "Actuator")
+        self.motor_front_left = MotorDriver(3, 4, "Front Left")
+        self.motor_front_right = MotorDriver(15, 18, "Front Right")
+        self.motor_rear_left = MotorDriver(9, 11, "Rear Left")
+        self.motor_rear_right = MotorDriver(23, 24, "Rear Right")
+        self.actuator = MotorDriver(19, 26, "Actuator")
         
         # initialize differential steering algo
         self.steering = DifferentialSteering(pivot_y_limit=25)
