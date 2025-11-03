@@ -11,9 +11,9 @@ A (left)     Y (right)
 when holding the controller vertically with the joystick on the top, this code 
 - controls the up and down movement of the linear actuator using the **X button** for up and the **B button** for down
 - controls forward and back movement based on the position of the joystick from the center on the y-axis
-  - positive value (0 - 100) for forward, negative value (-10, 100) for backwards
+  - positive value (10 - 100) for forward, negative value (-10, 100) for backwards
 - controls the pivot/turn based on the position of the joystick from the center on the x-axis
-  - positive value (0 - 100) for right turn, negative value (-10, 100) for left turn
+  - positive value (10 - 100) for right turn, negative value (-10, 100) for left turn
 - controls the speed of movement
   - 0 = no movement, |100| = fastest movement
 
