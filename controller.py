@@ -62,7 +62,7 @@ class BluetoothController:
                     # listening for joystick movement
                     if event.code == ecodes.ABS_RX:
                         # x-axis (left/right turn)
-                        raw_value = int((event.value - 128) / 128 * 100) # this is assuming 0-255 range for controller, will have to change if found different
+                        raw_value = int((event.value - 32767) / 32767 * 100) # this is using (-32767,32767) range for controller
                         # apply dead zone
                         if abs(raw_value) < self.dead_zone:
                             self.joystick_x = 0
@@ -71,17 +71,15 @@ class BluetoothController:
                     
                     elif event.code == ecodes.ABS_RY:
                         # y-axis (forward/backward)
-                        raw_value = int((event.value - 128) / 128 * 100)
+                        raw_value = int((event.value - 32767) / 32767 * 100)
                         # apply dead zone
                         if abs(raw_value) < self.dead_zone:
                             self.joystick_y = 0
                         else:
-                             # invert: up = forward = negative in raw, positive in our system
-                            self.joystick_y = -raw_value # this is assuming 0-255 range where 0 = up and 255 = down (why we invert)
+                            self.joystick_y = raw_value 
                 
                 elif event.type == ecodes.EV_KEY:
                     # listening for button press
-                    #might have different button naming convention with controller (not sure yet)
                     if event.code == ecodes.BTN_NORTH:
                         self.button_x = (event.value == 1)
                     elif event.code == ecodes.BTN_SOUTH:
