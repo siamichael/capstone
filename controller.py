@@ -15,7 +15,7 @@ class BluetoothController:
         self.controller = None
         for device in devices:
             device_name = device.name.lower()
-            if "bluetooth" in device_name or "controller" in device_name or "nintendo" in device_name or "switch" in device_name:
+            if "joy-con (r)" == device_name:
                 self.controller = device
                 print(f"Found controller: {device.name}")
                 break
@@ -46,16 +46,6 @@ class BluetoothController:
 
         # track if controller sent events
         self.received_events_this_frame = False
-
-        self.accepted_axes = {
-            ecodes.ABS_X,
-            ecodes.ABS_Y,
-            ecodes.BTN_X,
-            ecodes.BTN_B,
-            ecodes.BTN_Y,
-            ecodes.BTN_A,
-        }
-
     
     def read_events(self):
         """
