@@ -60,7 +60,7 @@ class BluetoothController:
                 
                 if event.type == ecodes.EV_ABS:
                     # listening for joystick movement
-                    if event.code == ecodes.ABS_X:
+                    if event.code == ecodes.ABS_RX:
                         # x-axis (left/right turn)
                         raw_value = int((event.value - 128) / 128 * 100) # this is assuming 0-255 range for controller, will have to change if found different
                         # apply dead zone
@@ -69,7 +69,7 @@ class BluetoothController:
                         else:
                             self.joystick_x = raw_value
                     
-                    elif event.code == ecodes.ABS_Y:
+                    elif event.code == ecodes.ABS_RY:
                         # y-axis (forward/backward)
                         raw_value = int((event.value - 128) / 128 * 100)
                         # apply dead zone
@@ -82,13 +82,13 @@ class BluetoothController:
                 elif event.type == ecodes.EV_KEY:
                     # listening for button press
                     #might have different button naming convention with controller (not sure yet)
-                    if event.code == ecodes.BTN_X:
+                    if event.code == ecodes.BTN_NORTH:
                         self.button_x = (event.value == 1)
-                    elif event.code == ecodes.BTN_B:
+                    elif event.code == ecodes.BTN_SOUTH:
                         self.button_b = (event.value == 1)
-                    elif event.code == ecodes.BTN_Y:
+                    elif event.code == ecodes.BTN_WEST:
                         self.button_y = (event.value == 1)
-                    elif event.code == ecodes.BTN_A:
+                    elif event.code == ecodes.BTN_EAST:
                         self.button_a = (event.value == 1)
         
         except BlockingIOError:
