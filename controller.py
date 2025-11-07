@@ -15,7 +15,7 @@ class BluetoothController:
         self.controller = None
         for device in devices:
             device_name = device.name.lower()
-            if "bluetooth" in device_name or "controller" in device_name or "vr" in device_name:
+            if "bluetooth" in device_name or "controller" in device_name or "nintendo" in device_name or "switch" in device_name:
                 self.controller = device
                 print(f"Found controller: {device.name}")
                 break
@@ -27,6 +27,10 @@ class BluetoothController:
                 print(f"  - {device.name}")
             raise Exception("No Bluetooth controller found!")
         
+        # if controller disconnects, instead of program freezing, it continues main function and shuts off program if necessary
+        flags = fcntl.fcntl(self.controller.fd, fcntl.F_GETFL)
+        fcntl.fcntl(self.controller.fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
+        
         # initialize input values
         self.joystick_x = 0   # left/right turn (-100 to 100)
         self.joystick_y = 0   # forward/backward (-100 to 100)
@@ -34,8 +38,8 @@ class BluetoothController:
         # buttons - when holding controller vertically
         self.button_x = False   # top button - raise tongue
         self.button_b = False   # bottom button - lower tongue
-        self.button_a = False   # left button - (maybe decrease speed)
-        self.button_y = False   # right button - (maybe increase speed)
+        self.button_y = False   # left button - (maybe decrease speed)
+        self.button_a = False   # right button - (maybe increase speed)
         
         # joystick dead zone (ignore small movements near center)
         self.dead_zone = 10
@@ -83,10 +87,10 @@ class BluetoothController:
                         self.button_x = (event.value == 1)
                     elif event.code == ecodes.BTN_B:
                         self.button_b = (event.value == 1)
-                    elif event.code == ecodes.BTN_A:
-                        self.button_a = (event.value == 1)
                     elif event.code == ecodes.BTN_Y:
                         self.button_y = (event.value == 1)
+                    elif event.code == ecodes.BTN_A:
+                        self.button_a = (event.value == 1)
         
         except BlockingIOError:
             # no events available right now
@@ -125,9 +129,9 @@ class BluetoothController:
         Returns:
             "increase", "decrease", or None
 
-        if self.button_y:  # right button
+        if self.button_a:  # right button
             return "increase"
-        elif self.button_a:  # left button
+        elif self.button_y:  # left button
             return "decrease"
         else:
             return None
