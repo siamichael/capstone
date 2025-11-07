@@ -27,10 +27,6 @@ class BluetoothController:
                 print(f"  - {device.name}")
             raise Exception("No Bluetooth controller found!")
         
-        # if controller disconnects, instead of program freezing, it continues main function and shuts off program if necessary
-        flags = fcntl.fcntl(self.controller.fd, fcntl.F_GETFL)
-        fcntl.fcntl(self.controller.fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
-        
         # initialize input values
         self.joystick_x = 0   # left/right turn (-100 to 100)
         self.joystick_y = 0   # forward/backward (-100 to 100)
@@ -57,12 +53,27 @@ class BluetoothController:
         try:
             for event in self.controller.read():
                 self.received_events_this_frame = True
-                
-                if event.type == ecodes.EV_ABS:
+                    
+                if event.type == ecodes.EV_KEY:
+                    if event.code == ecodes.BTN_TR2:
+                        self.bottom_trigger = (event.value == 1)
+                        
+                    elif self.bottom_trigger:
+                    # listening for button press
+                        if event.code == ecodes.BTN_NORTH:
+                            self.button_x = (event.value == 1)
+                        elif event.code == ecodes.BTN_SOUTH:
+                            self.button_b = (event.value == 1)
+                        elif event.code == ecodes.BTN_WEST:
+                            self.button_y = (event.value == 1)
+                        elif event.code == ecodes.BTN_EAST:
+                            self.button_a = (event.value == 1) 
+                        
+                if event.type == ecodes.EV_ABS and self.bottom_trigger:
                     # listening for joystick movement
                     if event.code == ecodes.ABS_RX:
                         # x-axis (left/right turn)
-                        raw_value = int((event.value - 32767) / 32767 * 100) # this is using (-32767,32767) range for controller
+                        raw_value = int(event.value / 32767 * 100) # this is using (-32767,32767) range for controller
                         # apply dead zone
                         if abs(raw_value) < self.dead_zone:
                             self.joystick_x = 0
@@ -71,23 +82,13 @@ class BluetoothController:
                     
                     elif event.code == ecodes.ABS_RY:
                         # y-axis (forward/backward)
-                        raw_value = int((event.value - 32767) / 32767 * 100)
+                        raw_value = int(event.value / 32767 * 100)
                         # apply dead zone
                         if abs(raw_value) < self.dead_zone:
                             self.joystick_y = 0
                         else:
-                            self.joystick_y = raw_value 
+                            self.joystick_y = -raw_value 
                 
-                elif event.type == ecodes.EV_KEY:
-                    # listening for button press
-                    if event.code == ecodes.BTN_NORTH:
-                        self.button_x = (event.value == 1)
-                    elif event.code == ecodes.BTN_SOUTH:
-                        self.button_b = (event.value == 1)
-                    elif event.code == ecodes.BTN_WEST:
-                        self.button_y = (event.value == 1)
-                    elif event.code == ecodes.BTN_EAST:
-                        self.button_a = (event.value == 1)
         
         except BlockingIOError:
             # no events available right now
