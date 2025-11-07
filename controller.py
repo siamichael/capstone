@@ -47,6 +47,15 @@ class BluetoothController:
         # track if controller sent events
         self.received_events_this_frame = False
 
+        self.accepted_axes = {
+            ecodes.ABS_X,
+            ecodes.ABS_Y,
+            ecodes.BTN_X,
+            ecodes.BTN_B,
+            ecodes.BTN_Y,
+            ecodes.BTN_A,
+        }
+
     
     def read_events(self):
         """
