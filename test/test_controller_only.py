@@ -1,6 +1,11 @@
 # test_controller_only.py
 # Check if controller is actually sending values
 
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from controller import BluetoothController
 import time
 

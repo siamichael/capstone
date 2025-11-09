@@ -16,7 +16,7 @@ class Robot:
         self.motor_front_right = MotorDriver(15, 18, "Front Right")
         self.motor_rear_left = MotorDriver(9, 11, "Rear Left")
         self.motor_rear_right = MotorDriver(23, 24, "Rear Right")
-        self.actuator = MotorDriver(19, 26, "Actuator")
+        self.actuator = MotorDriver(19, 26, 13, 16, "Actuator")
         
         # initialize differential steering algo
         self.steering = DifferentialSteering(pivot_y_limit=25)
