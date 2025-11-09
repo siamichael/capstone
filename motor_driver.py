@@ -35,8 +35,8 @@ class MotorDriver:
             GPIO.output(l_en_pin, GPIO.HIGH)
         
         # create PWM objects (1000 Hz frequency)
-        self.pwm_forward = GPIO.PWM(rpwm_pin, 1000)
-        self.pwm_reverse = GPIO.PWM(lpwm_pin, 1000)
+        self.pwm_forward = GPIO.PWM(rpwm_pin, 10000)
+        self.pwm_reverse = GPIO.PWM(lpwm_pin, 10000)
         
         # start PWM at 0% duty cycle
         self.pwm_forward.start(0)
@@ -81,3 +81,6 @@ class MotorDriver:
             GPIO.output(self.r_en_pin, GPIO.LOW)
         if self.l_en_pin is not None:
             GPIO.output(self.l_en_pin, GPIO.LOW)
+            
+            GPIO.cleanup()
+

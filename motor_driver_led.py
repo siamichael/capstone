@@ -10,7 +10,7 @@ class MotorDriver:
     Simulates motor with 2 LEDs (forward and reverse)
     """
     
-    def __init__(self, forward_pin, reverse_pin, name="Motor"):
+    def __init__(self, forward_pin, reverse_pin, r_en_pin=None, l_en_pin=None, name="Motor"):
         """
         Initialize LED motor driver
         
@@ -21,15 +21,26 @@ class MotorDriver:
         """
         self.forward_pin = forward_pin
         self.reverse_pin = reverse_pin
+        
+        self.r_en_pin = r_en_pin
+        self.l_en_pin = l_en_pin
         self.name = name
         
         # Setup GPIO
         GPIO.setup(forward_pin, GPIO.OUT)
         GPIO.setup(reverse_pin, GPIO.OUT)
         
+        if r_en_pin is not None:
+            GPIO.setup(r_en_pin, GPIO.OUT)
+            GPIO.output(r_en_pin, GPIO.HIGH)
+        
+        if l_en_pin is not None:
+            GPIO.setup(l_en_pin, GPIO.OUT)
+            GPIO.output(l_en_pin, GPIO.HIGH)
+        
         # Setup PWM (1000 Hz)
-        self.forward_pwm = GPIO.PWM(forward_pin, 1000)
-        self.reverse_pwm = GPIO.PWM(reverse_pin, 1000)
+        self.forward_pwm = GPIO.PWM(forward_pin, 10000)
+        self.reverse_pwm = GPIO.PWM(reverse_pin, 10000)
         
         # Start at 0%
         self.forward_pwm.start(0)
@@ -67,8 +78,13 @@ class MotorDriver:
         """Clean up GPIO"""
         self.forward_pwm.stop()
         self.reverse_pwm.stop()
+        
+        if self.r_en_pin is not None:
+            GPIO.output(self.r_en_pin, GPIO.LOW)
+        if self.l_en_pin is not None:
+            GPIO.output(self.l_en_pin, GPIO.LOW)
+            
         GPIO.cleanup()
 
 
-# For compatibility with your existing code
-# This makes the LED version work exactly like the real version
+

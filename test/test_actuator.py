@@ -22,11 +22,7 @@ def main():
     GPIO.setmode(GPIO.BCM)
     
     print("[2/3] Initializing actuator...")
-    actuator = MotorDriver(
-        rpwm_pin=19,
-        lpwm_pin=26,
-        r_en_pin=13,
-        l_en_pin=16,
+    actuator = MotorDriver(19, 26, 13, 16,
         name="Actuator"
     )
     
@@ -44,21 +40,6 @@ def main():
         GPIO.cleanup()
         return
     
-    print("\nVerifying GPIO pin configuration...")
-    try:
-        # check if pins are set up correctly
-        print(f"  ✓ RPWM Pin {actuator.rpwm_pin}: Configured")
-        print(f"  ✓ LPWM Pin {actuator.lpwm_pin}: Configured")
-        if actuator.r_en_pin:
-            print(f"  ✓ R_EN Pin {actuator.r_en_pin}: Configured (HIGH)")
-        if actuator.l_en_pin:
-            print(f"  ✓ L_EN Pin {actuator.l_en_pin}: Configured (HIGH)")
-    except Exception as e:
-        print(f"  ✗ GPIO Error: {e}")
-        actuator.cleanup()
-        GPIO.cleanup()
-        return
-    
     print("\n" + "=" * 50)
     print("ACTUATOR TEST READY")
     print("=" * 50)
@@ -69,7 +50,7 @@ def main():
     print("\n" + "=" * 50 + "\n")
     
     last_command_time = time.time()
-    command_timeout = 1.5  # stop if no commands for 1.5 seconds
+    command_timeout = 4  # stop if no commands for 1.5 seconds
     
     try:
         while True:
@@ -89,10 +70,10 @@ def main():
                 actuator_cmd = controller.get_actuator_command()
                 
                 if actuator_cmd == "raise":
-                    actuator.set_speed(50)  # 50% speed raising
+                    actuator.set_speed(100)  # 50% speed raising
                     print("Raising actuator...", end='\r')
                 elif actuator_cmd == "lower":
-                    actuator.set_speed(-50)  # 50% speed lowering
+                    actuator.set_speed(-100)  # 50% speed lowering
                     print("Lowering actuator...", end='\r')
                 else:
                     actuator.stop()
