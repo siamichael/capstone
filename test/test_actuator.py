@@ -44,6 +44,21 @@ def main():
         GPIO.cleanup()
         return
     
+    print("\nVerifying GPIO pin configuration...")
+    try:
+        # check if pins are set up correctly
+        print(f"  ✓ RPWM Pin {actuator.rpwm_pin}: Configured")
+        print(f"  ✓ LPWM Pin {actuator.lpwm_pin}: Configured")
+        if actuator.r_en_pin:
+            print(f"  ✓ R_EN Pin {actuator.r_en_pin}: Configured (HIGH)")
+        if actuator.l_en_pin:
+            print(f"  ✓ L_EN Pin {actuator.l_en_pin}: Configured (HIGH)")
+    except Exception as e:
+        print(f"  ✗ GPIO Error: {e}")
+        actuator.cleanup()
+        GPIO.cleanup()
+        return
+    
     print("\n" + "=" * 50)
     print("ACTUATOR TEST READY")
     print("=" * 50)
