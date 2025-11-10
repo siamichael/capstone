@@ -60,6 +60,14 @@ class BluetoothController:
                     if event.code == ecodes.BTN_TR2:
                         self.bottom_trigger = (event.value == 1)
                         
+                        if not self.bottom_trigger:
+                                self.joystick_x = 0
+                                self.joystick_y = 0
+                                self.button_x = 0
+                                self.button_b = 0
+                                self.button_a = 0 # can be taken out depending on functionality of button
+                                self.button_y = 0 # ^^
+                        
                     elif self.bottom_trigger:
                     # listening for button press
                         if event.code == ecodes.BTN_NORTH:
@@ -91,13 +99,6 @@ class BluetoothController:
                         else:
                             self.joystick_y = -raw_value 
 
-                    if not self.bottom_trigger:
-                        self.joystick_x = 0
-                        self.joystick_y = 0
-                        self.button_x = 0
-                        self.button_b = 0
-                        self.button_a = 0 # can be taken out depending on functionality of button
-                        self.button_y = 0 # ^^
                 
         
         except BlockingIOError:
