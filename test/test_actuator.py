@@ -26,7 +26,6 @@ def main():
         name="Actuator"
     )
     
-    # initialize controller
     print("[3/3] Connecting to Bluetooth controller...")
     try:
         controller = BluetoothController()
@@ -50,7 +49,7 @@ def main():
     print("\n" + "=" * 50 + "\n")
     
     last_command_time = time.time()
-    command_timeout = 4  # stop if no commands for 1.5 seconds
+    command_timeout = 4
     
     try:
         while True:
@@ -70,10 +69,10 @@ def main():
                 actuator_cmd = controller.get_actuator_command()
                 
                 if actuator_cmd == "raise":
-                    actuator.set_speed(100)  # 50% speed raising
+                    actuator.set_speed(100)
                     print("Raising actuator...", end='\r')
                 elif actuator_cmd == "lower":
-                    actuator.set_speed(-100)  # 50% speed lowering
+                    actuator.set_speed(-100)
                     print("Lowering actuator...", end='\r')
                 else:
                     actuator.stop()

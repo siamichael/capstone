@@ -8,7 +8,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from motor_driver_led import MotorDriver  # LED version
+from motor_driver import MotorDriver
 from controller import BluetoothController
 from differential_steering import DifferentialSteering
 

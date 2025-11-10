@@ -36,6 +36,8 @@ class BluetoothController:
         self.button_b = False   # bottom button - lower tongue
         self.button_y = False   # left button - (maybe decrease speed)
         self.button_a = False   # right button - (maybe increase speed)
+
+        self.bottom_trigger = False   # trigger at top of joy con
         
         # joystick dead zone (ignore small movements near center)
         self.dead_zone = 10
@@ -143,3 +145,14 @@ class BluetoothController:
             return True
         except:
             return False
+        
+    def has_input(self):
+        """
+        check if there's any active input (buttons held or joystick moved)
+        
+        Returns:
+            true if any button is held or joystick is not centered
+        """
+        return (self.button_x or self.button_b or self.button_y or self.button_a or
+                self.joystick_x != 0 or self.joystick_y != 0)
+

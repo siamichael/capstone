@@ -63,7 +63,7 @@ def main():
             forward, turn = controller.get_drive_values()
             
             # update command time if there's input
-            if controller.received_events_this_frame:
+            if controller.received_events_this_frame or controller.has_input():
                 last_command_time = time.time()
             
             # check for command timeout (safety feature)
