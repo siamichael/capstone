@@ -22,9 +22,7 @@ def main():
     GPIO.setmode(GPIO.BCM)
     
     print("[2/3] Initializing actuator...")
-    actuator = MotorDriver(19, 26, 13, 16,
-        name="Actuator"
-    )
+    actuator = MotorDriver(19, 26, name="Actuator")
     
     print("[3/3] Connecting to Bluetooth controller...")
     try:

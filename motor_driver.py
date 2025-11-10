@@ -5,7 +5,7 @@ controls one motor
 import RPi.GPIO as GPIO
 
 class MotorDriver:
-    def __init__(self, rpwm_pin, lpwm_pin, r_en_pin=None, l_en_pin=None, name="Motor"):
+    def __init__(self, rpwm_pin, lpwm_pin, name="Motor"):
         """
         initialize motor driver.
         
@@ -18,14 +18,15 @@ class MotorDriver:
         """
         self.rpwm_pin = rpwm_pin
         self.lpwm_pin = lpwm_pin
-        self.r_en_pin = r_en_pin
-        self.l_en_pin = l_en_pin
+        # self.r_en_pin = r_en_pin
+        # self.l_en_pin = l_en_pin
         self.name = name
         
         # setup GPIO pins
         GPIO.setup(rpwm_pin, GPIO.OUT)
         GPIO.setup(lpwm_pin, GPIO.OUT)
 
+        """
         if r_en_pin is not None:
             GPIO.setup(r_en_pin, GPIO.OUT)
             GPIO.output(r_en_pin, GPIO.HIGH)
@@ -33,6 +34,7 @@ class MotorDriver:
         if l_en_pin is not None:
             GPIO.setup(l_en_pin, GPIO.OUT)
             GPIO.output(l_en_pin, GPIO.HIGH)
+        """
         
         # create PWM objects (1000 Hz frequency)
         self.pwm_forward = GPIO.PWM(rpwm_pin, 10000)
@@ -77,9 +79,11 @@ class MotorDriver:
         self.pwm_forward.stop()
         self.pwm_reverse.stop()
 
+        """
         if self.r_en_pin is not None:
             GPIO.output(self.r_en_pin, GPIO.LOW)
         if self.l_en_pin is not None:
             GPIO.output(self.l_en_pin, GPIO.LOW)
+        """
             
 
