@@ -58,7 +58,7 @@ def main():
             
             controller.read_events()
             
-            if controller.received_events_this_frame:
+            if controller.received_events_this_frame or controller.has_input:
                 last_command_time = time.time()
             
             if time.time() - last_command_time > command_timeout:
