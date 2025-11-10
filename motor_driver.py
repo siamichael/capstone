@@ -82,5 +82,4 @@ class MotorDriver:
         if self.l_en_pin is not None:
             GPIO.output(self.l_en_pin, GPIO.LOW)
             
-            GPIO.cleanup()
 
