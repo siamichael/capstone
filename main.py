@@ -76,9 +76,9 @@ def main():
             # get actuator command
             actuator_cmd = controller.get_actuator_command()
             if actuator_cmd == "raise":
-                robot.raise_tongue(speed=50)
+                robot.raise_tongue(100)
             elif actuator_cmd == "lower":
-                robot.lower_tongue(speed=50)
+                robot.lower_tongue(100)
             else:
                 robot.stop_actuator()
             

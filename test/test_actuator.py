@@ -67,10 +67,10 @@ def main():
                 actuator_cmd = controller.get_actuator_command()
                 
                 if actuator_cmd == "raise":
-                    actuator.set_speed(100)
+                    actuator.set_speed(-100)
                     print("Raising actuator...", end='\r')
                 elif actuator_cmd == "lower":
-                    actuator.set_speed(-100)
+                    actuator.set_speed(100)
                     print("Lowering actuator...", end='\r')
                 else:
                     actuator.stop()

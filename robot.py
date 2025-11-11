@@ -68,7 +68,7 @@ class Robot:
         Args:
             speed: 0-100, speed of actuator
         """
-        self.actuator.set_speed(speed)
+        self.actuator.set_speed(-speed)
     
     def lower_tongue(self, speed=50):
         """
@@ -77,7 +77,7 @@ class Robot:
         Args:
             speed: 0-100, speed of actuator (positive, will be reversed internally)
         """
-        self.actuator.set_speed(-speed)
+        self.actuator.set_speed(speed)
     
     def stop_actuator(self):
         self.actuator.stop()
@@ -89,7 +89,6 @@ class Robot:
         self.motor_rear_left.stop()
         self.motor_rear_right.stop()
         self.actuator.stop()
-        print("EMERGENCY STOP - All motors stopped")
     
     def cleanup(self):
         """clean up GPIO pins."""
