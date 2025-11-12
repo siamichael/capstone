@@ -1,12 +1,29 @@
 import sys
 import os
 
-
 import time
 import RPi.GPIO as GPIO
 
 RPWM_PIN = 3
 LPWM_PIN = 4
+
+def ramp_speed(pwm_object, start_speed, end_speed, duration=0.3):
+    """
+    Smoothly ramp motor speed
+    
+    Args:
+        pwm_object: PWM object to control
+        start_speed: Starting duty cycle (0-100)
+        end_speed: Ending duty cycle (0-100)
+        duration: Ramp time in seconds (default 0.3s)
+    """
+    steps = 20
+    delay = duration / steps
+    
+    for i in range(steps + 1):
+        current_speed = start_speed + (end_speed - start_speed) * (i / steps)
+        pwm_object.ChangeDutyCycle(int(current_speed))
+        time.sleep(delay)
 	
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(RPWM_PIN, GPIO.OUT)
@@ -16,25 +33,16 @@ pwm_forward = GPIO.PWM(RPWM_PIN, 1000)
 pwm_reverse = GPIO.PWM(LPWM_PIN, 1000)
 pwm_forward.start(0)
 pwm_reverse.start(0)
-try:
-	print("Spin forward 10", end="\n")
-	pwm_forward.ChangeDutyCycle(10)
-	time.sleep(2)
-	
-	print("Spin forward 25", end="\n")
-	pwm_forward.ChangeDutyCycle(25)
-	time.sleep(2)
 
-	print("stop forward 50")
-	pwm_forward.ChangeDutyCycle(50)
-	time.sleep(1)
-	
-	print("Spin forward 100", end="\n")
-	pwm_forward.ChangeDutyCycle(100)
+try:
+	"""
+	print("Spin forward", end="\n")
+	pwm_forward.ChangeDutyCycle(0)
 	time.sleep(2)
 
 	print("stop forward")
-	pwm_forward.ChangeDutyCycle(0)
+	pwm_forward.ChangeDutyCycle(100)
+	time.sleep(1)
 	
 	
 	print("Spin backwards", end="\n")
@@ -44,12 +52,35 @@ try:
 	print("stop backwards")
 	pwm_reverse.ChangeDutyCycle(0)
 	time.sleep(1)
+	"""
 	
+	print("Spin forward")
+    # Ramp from stopped (100) to full speed (0)
+	ramp_speed(pwm_forward, start_speed=0, end_speed=10, duration=0.3)
+	time.sleep(2)
+
+	print("stop forward (with ramp)")
+	# Ramp from full speed (0) to stopped (100)
+	ramp_speed(pwm_forward, start_speed=100, end_speed=0, duration=0.3)
+	time.sleep(1)
+    
+	print("Spin backwards")
+	ramp_speed(pwm_reverse, start_speed=0, end_speed=100, duration=0.3)
+	time.sleep(2)
+    
+	print("stop backwards (with ramp)")
+	ramp_speed(pwm_reverse, start_speed=100, end_speed=0, duration=0.3)
+	time.sleep(1)
 	
 except KeyboardInterrupt:
 	print("Test ended")
 	
 finally:
+	try:
+		ramp_speed(pwm_forward, start_speed=100, end_speed=0, duration=0.2)
+		ramp_speed(pwm_reverse, start_speed=100, end_speed=0, duration=0.2)
+	except:
+		pass
 	pwm_forward.stop()
 	pwm_reverse.stop()
 	GPIO.cleanup()
