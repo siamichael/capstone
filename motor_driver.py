@@ -17,6 +17,8 @@ class MotorDriver:
         self.rpwm_pin = rpwm_pin
         self.lpwm_pin = lpwm_pin
         self.name = name
+        self.ramp_time = 0.3
+        self.current_speed = 0
         
         # setup GPIO pins
         GPIO.setup(rpwm_pin, GPIO.OUT)
@@ -29,17 +31,22 @@ class MotorDriver:
         # start PWM at 0% duty cycle
         self.pwm_forward.start(0)
         self.pwm_reverse.start(0)
-    
-    def set_speed(self, speed):
-        """
-        set motor speed
         
-        Args:
-            speed: -100 to 100
-                   positive = forward
-                   negative = reverse
-                   0 = stop
-        """
+    def _ramp_speed(self, start_speed, end_speed):
+        if self.ramp_time <= 0:
+            self.set_speed_instant(end_speed)
+            return
+        
+        steps = 20
+        delay = self.ramp_time / steps
+        
+        for i in range(steps + 1):
+            current = start_speed + (end_speed - start_speed) * (i / steps)
+            self._set_speed_instant(current)
+            time.sleep(delay)
+            
+    
+    def _set_speed_instant(self, speed):
         # clamp speed to valid range
         speed = max(-100, min(100, speed))
         
@@ -56,9 +63,21 @@ class MotorDriver:
             self.pwm_forward.ChangeDutyCycle(0)
             self.pwm_reverse.ChangeDutyCycle(0)
     
+    def set_speed(self, speed):
+        self._ramp_speed(self.current_speed, speed)
+        self.current_speed = speed
+        
+    def set_speed_instant(self, speed):
+        self._set_speed_instant(self.current_speed, speed)
+        self.current_speed = speed
+        
     def stop(self):
         """stop the motor"""
         self.set_speed(0)
+        
+    def emergency_stop(self):
+        """emergency stop - no ramping"""
+        self.set_speed_instant(0)
     
     def cleanup(self):
         """clean up PWM and GPIO"""

@@ -55,12 +55,10 @@ try:
 	"""
 	
 	print("Spin forward")
-    # Ramp from stopped (100) to full speed (0)
-	ramp_speed(pwm_forward, start_speed=0, end_speed=10, duration=0.3)
+	ramp_speed(pwm_forward, start_speed=0, end_speed=100, duration=0.3)
 	time.sleep(2)
 
 	print("stop forward (with ramp)")
-	# Ramp from full speed (0) to stopped (100)
 	ramp_speed(pwm_forward, start_speed=100, end_speed=0, duration=0.3)
 	time.sleep(1)
     
