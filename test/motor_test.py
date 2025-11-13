@@ -4,8 +4,8 @@ import os
 import time
 import RPi.GPIO as GPIO
 
-RPWM_PIN = 15
-LPWM_PIN = 18
+RPWM_PIN = 9
+LPWM_PIN = 11
 
 
 def ramp_speed(pwm_object, start_speed, end_speed, duration=0.3):    

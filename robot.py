@@ -12,22 +12,29 @@ class Robot:
         GPIO.setmode(GPIO.BCM)
         
         # initialize motor drivers
-        self.motor_front_left = MotorDriver(3, 4, "Front Left")
-        self.motor_front_right = MotorDriver(15, 18, "Front Right")
-        self.motor_rear_left = MotorDriver(9, 11, "Rear Left")
-        self.motor_rear_right = MotorDriver(23, 24, "Rear Right")
-        self.actuator = MotorDriver(19, 26, "Actuator")
+        self.motor_front_left = MotorDriver(3, 4, "Front Left", 400)
+        self.motor_front_right = MotorDriver(15, 18, "Front Right", 400)
+        self.motor_rear_left = MotorDriver(9, 11, "Rear Left", 400)
+        self.motor_rear_right = MotorDriver(23, 24, "Rear Right", 400)
+        self.actuator = MotorDriver(19, 26, "Actuator", 400)
         
         # initialize differential steering algo
         self.steering = DifferentialSteering(pivot_y_limit=25)
         
         # speed limit (0-100)
-        self.max_speed = 100  # reduce for testing
+        self.max_speed = 100
         
         # track actuator position (approximate)
         self.actuator_position = 0  # 0 = fully down, 100 = fully up
         self.actuator_limit = 18  # 18 inches of travel
     
+    def update(self):
+        self.motor_front_left.update()
+        self.motor_front_right.update()
+        self.motor_rear_left.update()
+        self.motor_rear_right.update()
+        self.actuator.update()
+        
     def drive(self, x_input, y_input):
         """
         drive the robot using differential steering
@@ -60,6 +67,15 @@ class Robot:
         """
         self.max_speed = max(0, min(100, speed_percent))
         print(f"Max speed set to {self.max_speed}%")
+    
+    def set_drive_acceleration(self, acceleration):
+        self.motor_front_left.set_acceleration(acceleration)
+        self.motor_front_right.set_acceleration(acceleration)
+        self.motor_rear_left.set_acceleration(acceleration)
+        self.motor_rear_right.set_acceleration(acceleration)
+    
+    def set_actuator_acceleration(self, acceleration):
+        self.actuator.set_acceleration(acceleration)
     
     def raise_tongue(self, speed=50):
         """

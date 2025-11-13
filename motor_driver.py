@@ -6,20 +6,25 @@ import RPi.GPIO as GPIO
 import time
 
 class MotorDriver:
-    def __init__(self, rpwm_pin, lpwm_pin, name="Motor"):
+    def __init__(self, rpwm_pin, lpwm_pin, name="Motor", acceleration=300):
         """
         initialize motor driver.
         
         Args:
             rpwm_pin: GPIO pin for forward control (RPWM on BTS7960)
             lpwm_pin: GPIO pin for reverse control (LPWM on BTS7960)
-            name: Name for this motor (for debugging)
+            name: Name for this motor (for ebugging)
         """
         self.rpwm_pin = rpwm_pin
         self.lpwm_pin = lpwm_pin
         self.name = name
-        self.ramp_time = 0.3
+        
+        self.acceleration = acceleration
+        
+        # speed tracking
         self.current_speed = 0
+        self.target_speed = 0
+        self.last_update_time = time.time()
         
         # setup GPIO pins
         GPIO.setup(rpwm_pin, GPIO.OUT)
@@ -33,20 +38,6 @@ class MotorDriver:
         self.pwm_forward.start(0)
         self.pwm_reverse.start(0)
         
-    def _ramp_speed(self, start_speed, end_speed):
-        if self.ramp_time <= 0:
-            self._set_speed_instant(end_speed)
-            return
-        
-        steps = 20
-        delay = self.ramp_time / steps
-        
-        for i in range(steps + 1):
-            current = start_speed + (end_speed - start_speed) * (i / steps)
-            self._set_speed_instant(current)
-            time.sleep(delay)
-            
-    
     def _set_speed_instant(self, speed):
         # clamp speed to valid range
         speed = max(-100, min(100, speed))
@@ -63,22 +54,52 @@ class MotorDriver:
             # stop
             self.pwm_forward.ChangeDutyCycle(0)
             self.pwm_reverse.ChangeDutyCycle(0)
+            
+    def update(self):
+        if self.current_speed == self.target_speed:
+            return
+        
+        now = time.time()
+        dt = now - self.last_update_time
+        self.last_update_time = now
+        
+        if dt <= 0:
+            return
+            
+        max_change = self.acceleration * dt
+        
+        diff = self.target_speed - self.current_speed
+        
+        if abs(diff) <= max_change:
+            self.current_speed = self.target_speed
+        else:
+            if diff > 0:
+                self.current_speed += max_change
+            else:
+                self.current_speed -= max_change
+            
+        self._set_speed_instant(self.current_speed)
     
     def set_speed(self, speed):
-        self._ramp_speed(self.current_speed, speed)
-        self.current_speed = speed
+        self.target_speed = max(-100, min(100, speed))
         
     def set_speed_instant(self, speed):
-        self._set_speed_instant(speed)
+        speed = max(-100, min(100, speed))
+        self.target_speed = speed
         self.current_speed = speed
+        self._set_speed_instant(speed)
+        
+    def set_acceleration(self, acceleration):
+        self.acceleration = max(1, acceleration)
         
     def stop(self):
         """stop the motor"""
         self.set_speed(0)
-        
+    
     def emergency_stop(self):
         """emergency stop - no ramping"""
         self.set_speed_instant(0)
+    
     
     def cleanup(self):
         """clean up PWM and GPIO"""
