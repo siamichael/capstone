@@ -15,9 +15,9 @@ def main():
     print("\n[1/3] Initializing robot hardware...")
     robot = Robot()
     
-    # set initial max speed (reduce for testing)
-    robot.set_max_speed(50)  # start at 50% for safety
-    print("Max speed set to 50% for initial testing")
+    # set initial max speed 
+    robot.set_max_speed(100)
+    print("Max speed set to 100%")
     
     # initialize controller
     print("\n[2/3] Connecting to Bluetooth controller...")

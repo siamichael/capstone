@@ -3,6 +3,7 @@ motor driver class for BTS7960 motor controllers
 controls one motor
 """
 import RPi.GPIO as GPIO
+import time
 
 class MotorDriver:
     def __init__(self, rpwm_pin, lpwm_pin, name="Motor"):
@@ -34,7 +35,7 @@ class MotorDriver:
         
     def _ramp_speed(self, start_speed, end_speed):
         if self.ramp_time <= 0:
-            self.set_speed_instant(end_speed)
+            self._set_speed_instant(end_speed)
             return
         
         steps = 20
@@ -68,7 +69,7 @@ class MotorDriver:
         self.current_speed = speed
         
     def set_speed_instant(self, speed):
-        self._set_speed_instant(self.current_speed, speed)
+        self._set_speed_instant(speed)
         self.current_speed = speed
         
     def stop(self):
@@ -81,6 +82,7 @@ class MotorDriver:
     
     def cleanup(self):
         """clean up PWM and GPIO"""
+        self.emergency_stop()
         self.pwm_forward.stop()
         self.pwm_reverse.stop()
             

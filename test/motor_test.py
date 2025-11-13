@@ -4,19 +4,11 @@ import os
 import time
 import RPi.GPIO as GPIO
 
-RPWM_PIN = 3
-LPWM_PIN = 4
+RPWM_PIN = 15
+LPWM_PIN = 18
 
-def ramp_speed(pwm_object, start_speed, end_speed, duration=0.3):
-    """
-    Smoothly ramp motor speed
-    
-    Args:
-        pwm_object: PWM object to control
-        start_speed: Starting duty cycle (0-100)
-        end_speed: Ending duty cycle (0-100)
-        duration: Ramp time in seconds (default 0.3s)
-    """
+
+def ramp_speed(pwm_object, start_speed, end_speed, duration=0.3):    
     steps = 20
     delay = duration / steps
     
@@ -24,10 +16,14 @@ def ramp_speed(pwm_object, start_speed, end_speed, duration=0.3):
         current_speed = start_speed + (end_speed - start_speed) * (i / steps)
         pwm_object.ChangeDutyCycle(int(current_speed))
         time.sleep(delay)
+
 	
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(RPWM_PIN, GPIO.OUT)
 GPIO.setup(LPWM_PIN, GPIO.OUT)
+
+GPIO.output(RPWM_PIN, GPIO.LOW)
+GPIO.output(LPWM_PIN, GPIO.LOW)
 
 pwm_forward = GPIO.PWM(RPWM_PIN, 1000)
 pwm_reverse = GPIO.PWM(LPWM_PIN, 1000)
@@ -37,11 +33,11 @@ pwm_reverse.start(0)
 try:
 	"""
 	print("Spin forward", end="\n")
-	pwm_forward.ChangeDutyCycle(0)
+	pwm_forward.ChangeDutyCycle(100)
 	time.sleep(2)
 
 	print("stop forward")
-	pwm_forward.ChangeDutyCycle(100)
+	pwm_forward.ChangeDutyCycle(0)
 	time.sleep(1)
 	
 	
@@ -70,15 +66,11 @@ try:
 	ramp_speed(pwm_reverse, start_speed=100, end_speed=0, duration=0.3)
 	time.sleep(1)
 	
+	
 except KeyboardInterrupt:
 	print("Test ended")
 	
 finally:
-	try:
-		ramp_speed(pwm_forward, start_speed=100, end_speed=0, duration=0.2)
-		ramp_speed(pwm_reverse, start_speed=100, end_speed=0, duration=0.2)
-	except:
-		pass
 	pwm_forward.stop()
 	pwm_reverse.stop()
 	GPIO.cleanup()
