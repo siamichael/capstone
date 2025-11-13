@@ -4,7 +4,7 @@ import os
 import time
 import RPi.GPIO as GPIO
 
-RPWM_PIN = 9
+RPWM_PIN = 5
 LPWM_PIN = 11
 
 

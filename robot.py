@@ -12,11 +12,11 @@ class Robot:
         GPIO.setmode(GPIO.BCM)
         
         # initialize motor drivers
-        self.motor_front_left = MotorDriver(3, 4, "Front Left", 400)
-        self.motor_front_right = MotorDriver(15, 18, "Front Right", 400)
-        self.motor_rear_left = MotorDriver(9, 11, "Rear Left", 400)
-        self.motor_rear_right = MotorDriver(23, 24, "Rear Right", 400)
-        self.actuator = MotorDriver(19, 26, "Actuator", 400)
+        self.motor_front_left = MotorDriver(3, 4, "Front Left", 200)
+        self.motor_front_right = MotorDriver(15, 18, "Front Right", 200)
+        self.motor_rear_left = MotorDriver(5, 11, "Rear Left", 200)
+        self.motor_rear_right = MotorDriver(23, 24, "Rear Right", 200)
+        self.actuator = MotorDriver(19, 26, "Actuator", 200)
         
         # initialize differential steering algo
         self.steering = DifferentialSteering(pivot_y_limit=25)
@@ -55,8 +55,8 @@ class Robot:
         
         self.motor_front_left.set_speed(left_speed)
         self.motor_rear_left.set_speed(left_speed)
-        self.motor_front_right.set_speed(right_speed)
-        self.motor_rear_right.set_speed(right_speed)
+        self.motor_front_right.set_speed(-right_speed)
+        self.motor_rear_right.set_speed(-right_speed)
     
     def set_max_speed(self, speed_percent):
         """

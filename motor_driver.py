@@ -13,7 +13,7 @@ class MotorDriver:
         Args:
             rpwm_pin: GPIO pin for forward control (RPWM on BTS7960)
             lpwm_pin: GPIO pin for reverse control (LPWM on BTS7960)
-            name: Name for this motor (for ebugging)
+            name: Name for this motor (for debugging)
         """
         self.rpwm_pin = rpwm_pin
         self.lpwm_pin = lpwm_pin

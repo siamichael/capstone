@@ -10,8 +10,9 @@ from differential_steering import DifferentialSteering
 
 GPIO.setmode(GPIO.BCM)
 
-motor_front_right = MotorDriver(15, 18, "Front Right")
-motor_rear_right = MotorDriver(23, 24, "Rear Right")
+motor_front_right = MotorDriver(15, 18, "Front Right", 100)
+motor_rear_right = MotorDriver(23, 24, "Rear Right", 100)
+motor_rear_right = MotorDriver(5, 11, "Rear Left", 100)
 
 steering = DifferentialSteering(pivot_y_limit=25)
 
@@ -34,6 +35,9 @@ try:
             break
         
         controller.read_events()
+        
+        motor_front_right.update()
+        motor_rear_right.update()
         
         forward, turn = controller.get_drive_values()
         

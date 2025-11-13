@@ -59,6 +59,8 @@ def main():
             # read controller input
             controller.read_events()
             
+            robot.update()
+            
             # get drive commands
             forward, turn = controller.get_drive_values()
             
