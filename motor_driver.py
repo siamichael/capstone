@@ -98,7 +98,12 @@ class MotorDriver:
     
     def emergency_stop(self):
         """emergency stop - no ramping"""
-        self.set_speed_instant(0)
+        self.target_speed = 0
+        self.current_speed = 0
+        self.pwm_forward.ChangeDutyCycle(0)
+        self.pwm_reverse.ChangeDutyCycle(0)
+        GPIO.output(self.rpwm_pin, GPIO.LOW)
+        GPIO.output(self.lpwm_pin, GPIO.LOW)
     
     
     def cleanup(self):
