@@ -12,7 +12,7 @@ class Robot:
         GPIO.setmode(GPIO.BCM)
         
         # initialize motor drivers
-        self.motor_front_left = MotorDriver(3, 4, "Front Left", 200)
+        self.motor_front_left = MotorDriver(17, 4, "Front Left", 200)
         self.motor_front_right = MotorDriver(15, 18, "Front Right", 200)
         self.motor_rear_left = MotorDriver(5, 11, "Rear Left", 200)
         self.motor_rear_right = MotorDriver(23, 24, "Rear Right", 200)

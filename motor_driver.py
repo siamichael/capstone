@@ -71,7 +71,7 @@ class MotorDriver:
         diff = self.target_speed - self.current_speed
         
         if abs(diff) <= max_change:
-            self.current_speed = self.target_speed
+            self.current_speed = self.target_speed  
         else:
             if diff > 0:
                 self.current_speed += max_change
