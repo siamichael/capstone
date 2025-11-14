@@ -108,7 +108,10 @@ def main():
                 # check if controller is still connected
                 if not controller.is_connected():
                     print("\nWARNING: Controller disconnected")
+                    print(f"Actuator speed before stop: {robot.actuator.current_speed}")
+                    controller.reset_all_inputs()
                     robot.stop_all()
+                    print(f"Actuator speed before stop: {robot.actuator.current_speed}")
                     time.sleep(0.2)
                     break
                 
@@ -142,13 +145,6 @@ def main():
                 
                 # small delay (20Hz update rate)
                 time.sleep(0.05)
-    
-        except KeyboardInterrupt:
-            print("\n\n" + "=" * 50)
-            print("EMERGENCY STOP ACTIVATED (Ctrl+C)")
-            print("=" * 50)
-            signal_handler(signal.SIGINT, None)
-
         
         except Exception as e:
             print(f"\n\nERROR: {e}")

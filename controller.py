@@ -44,6 +44,16 @@ class BluetoothController:
 
         # track if controller sent events
         self.received_events_this_frame = False
+
+    def reset_all_inputs(self):
+        """Clear all input states - call when controller disconnects"""
+        self.joystick_x = 0
+        self.joystick_y = 0
+        self.button_x = False
+        self.button_b = False
+        self.button_a = False
+        self.button_y = False
+        self.bottom_trigger = False
     
     def read_events(self):
         """
