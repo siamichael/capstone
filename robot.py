@@ -100,11 +100,11 @@ class Robot:
     
     def stop_all(self):
         """emergency stop - stop all motors immediately"""
-        self.motor_front_left.stop()
-        self.motor_front_right.stop()
-        self.motor_rear_left.stop()
-        self.motor_rear_right.stop()
-        self.actuator.stop()
+        self.motor_front_left.emergency_stop()
+        self.motor_front_right.emergency_stop()
+        self.motor_rear_left.emergency_stop()
+        self.motor_rear_right.emergency_stop()
+        self.actuator.emergency_stop()
     
     def cleanup(self):
         """clean up GPIO pins."""

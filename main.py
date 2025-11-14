@@ -109,6 +109,7 @@ def main():
                 if not controller.is_connected():
                     print("\nWARNING: Controller disconnected")
                     robot.stop_all()
+                    time.sleep(0.2)
                     break
                 
                 # read controller input
