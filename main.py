@@ -5,6 +5,7 @@ reads bluetooth controller and controls device
 import time
 import signal
 import sys
+import subprocess
 from robot import Robot
 from controller import BluetoothController
 
@@ -27,8 +28,33 @@ def signal_handler(sig, frame):
     print("=" * 50)
     sys.exit(0)
 
+def connect_bluetooth_controller():
+    try:
+        result = subprocess.run(['bluetoothctl', 'devices'], 
+                              capture_output=True, text=True, timeout=5)
+        
+        for line in result.stdout.split('\n'):
+            if 'joy-con (r)' in line.lower():
+                parts = line.split()
+                if len(parts) >= 2:
+                    mac_address = parts[1]
+                    print(f"Found Joy-Con at {mac_address}, connecting...")
+                    
+                    subprocess.run(['bluetoothctl', 'connect', mac_address], 
+                                 capture_output=True, timeout=10)
+                    time.sleep(3)
+                    return True
+        
+        print("Joy-Con not found in paired devices")
+        return False
+        
+    except Exception as e:
+        print(f"Bluetooth connection attempt failed: {e}")
+        return False
+
 def wait_for_controller():
     while True:
+        connect_bluetooth_controller()
         try:
             print("Connecting to controller...")
             controller = BluetoothController()
@@ -39,6 +65,8 @@ def wait_for_controller():
             time.sleep(3)
 
 def main():
+    global robot
+
     print("=" * 50)
     print("CONTROL SYSTEM")
     print("=" * 50)
@@ -46,6 +74,9 @@ def main():
     # initialize robot
     print("\n[1/2] Initializing robot hardware...")
     robot = Robot()
+
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
     
     # set initial max speed 
     robot.set_max_speed(100)
@@ -115,6 +146,8 @@ def main():
             print("\n\n" + "=" * 50)
             print("EMERGENCY STOP ACTIVATED (Ctrl+C)")
             print("=" * 50)
+            signal_handler(signal.SIGINT, None)
+
         
         except Exception as e:
             print(f"\n\nERROR: {e}")
