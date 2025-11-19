@@ -15,44 +15,44 @@ class Buzzer:
         """
         self.pin = pin
         GPIO.setup(pin, GPIO.OUT)
-        self.pwm = GPIO.PWM(pin, 2000)
+        self.pwm = GPIO.PWM(pin, 1000)
         self.pwm.start(0)
     
-    def beep(self, duration=0.1):
+    def beep(self, frequency, duration=0.1):
+        self.pwm.ChangeFrequency(frequency)
         self.pwm.ChangeDutyCycle(50)
         time.sleep(duration)
         self.pwm.ChangeDutyCycle(0)
     
-    def double_beep(self):
-        self.beep(0.1)
-        time.sleep(0.1)
-        self.beep(0.1)
-    
     def connect_sound(self):
-        self.pwm.ChangeFrequency(1000)
-        self.beep(0.15)
+        self.beep(3500, 0.1)
         time.sleep(0.05)
-        self.pwm.ChangeFrequency(1500)
-        self.beep(0.15)
-        self.pwm.ChangeFrequency(2000)
+        self.beep(4000, 0.1)
+        time.sleep(0.05)
+        self.beep(4500, 0.15)
     
     def disconnect_sound(self):
-        self.pwm.ChangeFrequency(1500)
-        self.beep(0.15)
+        self.beep(4500, 0.1)
         time.sleep(0.05)
-        self.pwm.ChangeFrequency(1000)
-        self.beep(0.15)
-        self.pwm.ChangeFrequency(2000)
+        self.beep(4000, 0.1)
+        time.sleep(0.05)
+        self.beep(3500, 0.15)
     
     def drive_mode_sound(self):
-        self.pwm.ChangeFrequency(2500)
-        self.double_beep()
-        self.pwm.ChangeFrequency(2000)
+        self.beep(4500, 0.08)
+        time.sleep(0.08)
+        self.beep(4500, 0.08)
     
     def hitch_mode_sound(self):
-        self.pwm.ChangeFrequency(1500)
-        self.double_beep()
-        self.pwm.ChangeFrequency(2000)
+        self.beep(3500, 0.08)
+        time.sleep(0.08)
+        self.beep(3500, 0.08)
+    
+    def error_sound(self):
+        for _ in range(3):
+            self.beep(4000, 0.1)
+            time.sleep(0.05)
     
     def cleanup(self):
+        self.pwm.ChangeDutyCycle(0)
         self.pwm.stop()
