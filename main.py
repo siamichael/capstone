@@ -135,6 +135,9 @@ def main():
                 
                 # get drive commands
                 forward, turn = controller.get_drive_values()
+                if forward != 0 or turn != 0:
+                    left, right = robot.steering.compute_motors(turn, forward)
+                    print(f"Input: x={turn:3d}, y={forward:3d} | Output: L={left:3d}, R={right:3d}")
                 
                 # update command time if there's input
                 if controller.received_events_this_frame or controller.has_input():
