@@ -131,7 +131,7 @@ def main():
                 elif speed_adjustment == "hitch" and current_mode != "hitch":
                     current_mode = "hitch"
                     robot.set_max_speed(50)
-                    print(">> HITCH MODE activated (25% speed)")
+                    print(">> HITCH MODE activated (50% speed)")
                 
                 # get drive commands
                 forward, turn = controller.get_drive_values()
