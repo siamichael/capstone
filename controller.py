@@ -34,8 +34,8 @@ class BluetoothController:
         # buttons - when holding controller vertically
         self.button_x = False   # top button - raise tongue
         self.button_b = False   # bottom button - lower tongue
-        self.button_y = False   # left button - (maybe decrease speed)
-        self.button_a = False   # right button - (maybe increase speed)
+        self.button_y = False   # left button - hitch mode
+        self.button_a = False   # right button - drive mode
 
         self.bottom_trigger = False   # trigger at top of joy con
         
@@ -140,22 +140,20 @@ class BluetoothController:
         else:
             return "stop"
 
-    """
     def get_speed_adjustment(self):
-    
+        """
         get speed limit adjustment from side buttons - have speed still found from the x/y position of joystick, but have left/right buttons control the speed limit
         
         Returns:
-            "increase", "decrease", or None
-
+            "drive", "hitch", or None
+        """
         if self.button_a:  # right button
-            return "increase"
+            return "drive"
         elif self.button_y:  # left button
-            return "decrease"
+            return "hitch"
         else:
             return None
     
-        """
 
     def is_connected(self):
         """check if controller is still connected"""
