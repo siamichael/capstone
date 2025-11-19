@@ -87,7 +87,9 @@ def main():
     # initialize controller 
         print("\n[2/2] Connecting to Bluetooth controller...")
         controller = wait_for_controller()
-    
+
+        robot.buzzer.connect_sound()
+        time.sleep(0.5)
     
         print("\n" + "=" * 50)
         print("ROBOT READY")
@@ -111,6 +113,7 @@ def main():
                 # check if controller is still connected
                 if not controller.is_connected():
                     print("\nWARNING: Controller disconnected")
+                    robot.buzzer.disconnect_sound()
                     print(f"Actuator speed before stop: {robot.actuator.current_speed}")
                     controller.reset_all_inputs()
                     robot.stop_all()
@@ -127,10 +130,12 @@ def main():
                 if speed_adjustment == "drive" and current_mode != "drive":
                     current_mode = "drive"
                     robot.set_max_speed(100)
+                    robot.buzzer.drive_mode_sound()
                     print(">> DRIVE MODE activated (100% speed)")
                 elif speed_adjustment == "hitch" and current_mode != "hitch":
                     current_mode = "hitch"
                     robot.set_max_speed(50)
+                    robot.buzzer.hitch_mode_sound()
                     print(">> HITCH MODE activated (50% speed)")
                 
                 # get drive commands

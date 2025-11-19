@@ -7,6 +7,7 @@ from motor_driver import MotorDriver
 # from differential_steering import DifferentialSteering
 # from four_direction_steering import FourDirectionJoystick as DifferentialSteering
 from eight_direction_steering import EightDirectionJoystick as DifferentialSteering
+from buzzer import Buzzer
 
 class Robot:
     def __init__(self):
@@ -19,6 +20,9 @@ class Robot:
         self.motor_rear_left = MotorDriver(5, 11, "Rear Left", 200)
         self.motor_rear_right = MotorDriver(23, 24, "Rear Right", 200)
         self.actuator = MotorDriver(19, 26, "Actuator", 200)
+
+        # initialize buzzer pin
+        self.buzzer = Buzzer(pin=27)
         
         # initialize differential steering algo
         self.steering = DifferentialSteering(pivot_y_limit=25)
@@ -115,5 +119,6 @@ class Robot:
         self.motor_rear_left.cleanup()
         self.motor_rear_right.cleanup()
         self.actuator.cleanup()
+        self.buzzer.cleanup()
         GPIO.cleanup()
         print("GPIO cleanup complete")
