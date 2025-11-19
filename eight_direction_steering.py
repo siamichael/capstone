@@ -85,8 +85,8 @@ class EightDirectionJoystick:
                     self.right_motor = -magnitude
                 else:
                     # backward-right section (diagonal)
-                    self.left_motor = 0
-                    self.right_motor = -magnitude
+                    self.left_motor = -magnitude
+                    self.right_motor = 0
             else:  # x_value < 0
                 if abs_y < abs_x * threshold:
                     # left section (mostly X, little Y)
@@ -94,8 +94,8 @@ class EightDirectionJoystick:
                     self.right_motor = magnitude
                 else:
                     # backward-left section (diagonal)
-                    self.left_motor = -magnitude
-                    self.right_motor = 0
+                    self.left_motor = 0
+                    self.right_motor = -magnitude
         
         return self.left_motor, self.right_motor
     

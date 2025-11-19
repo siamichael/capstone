@@ -84,7 +84,7 @@ def main():
     print("Max speed set to 100%")
     
     while True:
-    # initialize controller
+    # initialize controller 
         print("\n[2/2] Connecting to Bluetooth controller...")
         controller = wait_for_controller()
     
