@@ -78,7 +78,8 @@ def main():
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     
-    # set initial max speed 
+    # set initial max speed
+    current_mode = "drive"
     robot.set_max_speed(100)
     print("Max speed set to 100%")
     
@@ -96,6 +97,8 @@ def main():
         print("  Joystick X-axis   - Turn Left/Right")
         print("  Button X (top)    - Raise Tongue")
         print("  Button B (bottom) - Lower Tongue")
+        print("  Button Y (left)   - Hitch Mode (25% max speed)")
+        print("  Button A (right)  - Drive Mode (100% max speed)")
         print("  Ctrl+C            - Emergency Stop & Exit") # can change if we get an actual button / could be button on the remote (but idk because if the remote unpairs)
         print("\n" + "=" * 50 + "\n")
     
@@ -119,6 +122,16 @@ def main():
                 controller.read_events()
                 
                 robot.update()
+
+                speed_adjustment = controller.get_speed_adjustment()
+                if speed_adjustment == "drive" and current_mode != "drive":
+                    current_mode = "drive"
+                    robot.set_max_speed(100)
+                    print(">> DRIVE MODE activated (100% speed)")
+                elif speed_adjustment == "hitch" and current_mode != "hitch":
+                    current_mode = "hitch"
+                    robot.set_max_speed(50)
+                    print(">> HITCH MODE activated (25% speed)")
                 
                 # get drive commands
                 forward, turn = controller.get_drive_values()

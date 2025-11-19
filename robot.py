@@ -5,6 +5,8 @@ manages 4 individual motors and actuator, uses differential steering
 import RPi.GPIO as GPIO
 from motor_driver import MotorDriver
 from differential_steering import DifferentialSteering
+# from four_direction_steering import FourDirectionJoystick as DifferentialSteering
+# from eight_direction_steering import EightDirectionJoystick as DifferentialSteering
 
 class Robot:
     def __init__(self):
