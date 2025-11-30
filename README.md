@@ -23,8 +23,7 @@ capstone/
 ├── motor_driver.py              # Low-level motor driver control with PWM
 ├── eight_direction_steering.py  # 8-direction discrete steering algorithm
 ├── buzzer.py                    # Audio feedback system
-├── bluetooth_autoconnect.sh     # Auto-connect controller on boot
-└── shutdown_button.py           # GPIO shutdown button handler
+└── bluetooth_autoconnect.sh     # Auto-connect controller on boot
 ```
 
 ### System Services
