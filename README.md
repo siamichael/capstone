@@ -10,7 +10,7 @@ A Raspberry Pi-based robot control system using a Nintendo Switch Joy-Con (R) co
 - **1x BTS7960 motor driver** (for linear actuator)
 - **4x Drive motors** (8-direction steering configuration)
 - **1x Linear actuator** (18" travel for tongue lifting)
-- **Power button** (GPIO3 for power on/shutdown)
+- **Piezo buzzer** (audio feedback on GPIO 27)
 
 ## System Architecture
 
@@ -22,6 +22,7 @@ capstone/
 ├── robot.py                     # High-level robot control and motor coordination
 ├── motor_driver.py              # Low-level motor driver control with PWM
 ├── eight_direction_steering.py  # 8-direction discrete steering algorithm
+├── buzzer.py                    # Audio feedback system
 ├── bluetooth_autoconnect.sh     # Auto-connect controller on boot
 └── shutdown_button.py           # GPIO shutdown button handler
 ```
@@ -156,6 +157,31 @@ Converts joystick input to discrete 8-direction control:
 - If `|y| < |x| × 0.414`: Primarily horizontal movement
 - Otherwise: Diagonal movement
 
+### buzzer.py
+Audio feedback system using PWM-controlled piezo buzzer:
+- Provides audio cues for system events
+- Different tones for different events
+- PWM control at variable frequencies (1kHz base)
+
+**Audio Feedback Events:**
+
+| Event | Sound Pattern | Frequency |
+|-------|---------------|-----------|
+| **Controller Connected** | Rising 3-tone beep (ascending) | 3500Hz → 4000Hz → 4500Hz |
+| **Controller Disconnected** | Falling 3-tone beep (descending) | 4500Hz → 4000Hz → 3500Hz |
+| **Drive Mode** | Two quick high beeps | 4500Hz × 2 |
+| **Hitch Mode** | Two quick low beeps | 3500Hz × 2 |
+| **Error** | Three rapid beeps | 4000Hz × 3 |
+
+**Key Methods:**
+- `beep(frequency, duration)` - Single beep at specified frequency
+- `connect_sound()` - Play connection success sound
+- `disconnect_sound()` - Play disconnection sound
+- `drive_mode_sound()` - Indicate drive mode active
+- `hitch_mode_sound()` - Indicate hitch mode active
+- `error_sound()` - Play error alert
+- `cleanup()` - Stop PWM and cleanup GPIO
+
 ### bluetooth_autoconnect.sh
 Bash script for automatic controller connection:
 - Runs on boot via systemd service
@@ -165,9 +191,13 @@ Bash script for automatic controller connection:
 - Restarts Bluetooth service if needed after 60 attempts (5 minutes)
 - Provides status messages for debugging
 
-### shutdown_button.py
-GPIO-based shutdown handler:
-- Monitors GPIO3 for button press
-- Hold for 2 seconds to trigger safe shutdown
-- Ensures clean motor stop before system shutdown
-- Uses `gpiozero` library for hardware interaction
+## GPIO Pin Assignments
+
+| Component | RPWM Pin (Forward) | LPWM Pin (Reverse) | Notes |
+|-----------|-------------------|-------------------|-------|
+| Front Left Motor | GPIO 17 | GPIO 4 | |
+| Front Right Motor | GPIO 15 | GPIO 18 | |
+| Rear Left Motor | GPIO 5 | GPIO 11 | |
+| Rear Right Motor | GPIO 23 | GPIO 24 | |
+| Actuator | GPIO 19 | GPIO 26 | |
+| **Buzzer** | **GPIO 27** | - | **PWM output** |
