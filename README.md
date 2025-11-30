@@ -30,7 +30,6 @@ capstone/
 
 - **robot.service** - Auto-starts robot control system on boot
 - **bluetooth-autoconnect.service** - Auto-connects Joy-Con controller
-- **shutdown-button.service** - Monitors GPIO3 for shutdown button
 
 ## Controller Layout
 ```
