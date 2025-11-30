@@ -34,8 +34,21 @@ capstone/
 - **shutdown-button.service** - Monitors GPIO3 for shutdown button
 
 ## Controller Layout
+```
+When holding the Joy-Con (R) vertically with the joystick at the top: 
+          [Trigger]  (hold to enable controls)
+ 
+          [Joystick]
 
-When holding the Joy-Con (R) vertically with the joystick at the top: [Trigger]  (hold to enable controls)     X (top)        - Raise actuatorY (left)   A (right)     B (bottom)     - Lower actuator  [Joystick]
+            X (top)
+        Raise actuator
+
+     Y (left)     A (right)     
+    Hitch Mode   Drive Mode
+  
+           B (bottom)
+         Lower actuator
+```
 
 ### Controls
 
@@ -44,9 +57,27 @@ When holding the Joy-Con (R) vertically with the joystick at the top: [Trigger] 
 | **Trigger (hold)** | Enable all controls | Required for operation |
 | **Joystick Y-axis** | Forward/Backward | +100 (forward) to -100 (backward) |
 | **Joystick X-axis** | Left/Right turn | +100 (right) to -100 (left) |
+| **Button A (right)** | **Drive Mode** | **100% max speed** |
+| **Button Y (left)** | **Hitch Mode** | **50% max speed (precision)** |
 | **X Button** | Raise actuator | While held |
 | **B Button** | Lower actuator | While held |
 | **Dead zone** | Ignore small movements | ±10 from center |
+
+### Operating Modes
+
+**Drive Mode (100% Speed):**
+- Full-speed operation for normal driving
+- Best for: Moving between locations, general operation
+- Activated by: Button A (right)
+- Feedback: Two quick high beeps (4500Hz)
+
+**Hitch Mode (50% Speed):**
+- Reduced speed for precision control
+- Best for: Positioning, hitching trailers, tight spaces
+- Activated by: Button Y (left)
+- Feedback: Two quick low beeps (3500Hz)
+
+**Mode switching is instant** - operator can switch anytime during operation. Current mode persists through controller disconnections and reconnections.
 
 ### Safety Features
 
@@ -59,9 +90,14 @@ When holding the Joy-Con (R) vertically with the joystick at the top: [Trigger] 
 
 ## Steering System
 
-The system uses **8-direction discrete steering** for precise, predictable control:Forward-Left    Forward    Forward-Right
-     ↖           ↑             ↗Left ←        [Center]        → Right     ↙           ↓             ↘
+The system uses **8-direction discrete steering** for precise, predictable control:
+```
+Forward-Left    Forward    Forward-Right
+     ↖           ↑             ↗
+Left ←        [Center]        → Right     
+     ↙           ↓             ↘
 Backward-Left  Backward  Backward-Right
+```
 
 ### Advantages of 8-Direction Steering
 
